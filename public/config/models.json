@@ -6,7 +6,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": true
     },
     {
       "id": "gpt-4.1-mini",
@@ -14,7 +15,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "gpt-4.1-nano",
@@ -22,7 +24,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "o3-mini",
@@ -30,7 +33,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": true
     },
     {
       "id": "gpt-4o",
@@ -38,7 +42,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": true
     },
     {
       "id": "gpt-4o-mini",
@@ -46,7 +51,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "deepseek-reasoner",
@@ -55,7 +61,8 @@
       "providerId": "deepseek",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "deepseek-chat"
+      "toolCallModel": "deepseek-chat",
+      "auth": false
     },
     {
       "id": "deepseek-chat",
@@ -63,15 +70,17 @@
       "provider": "DeepSeek",
       "providerId": "deepseek",
       "enabled": true,
-      "toolCallType": "manual"
+      "toolCallType": "manual",
+      "auth": false
     },
     {
       "id": "qwen-max",
       "name": "Qwen3 Max",
-      "provider": "OpenAI Compatible",
+      "provider": "Qwen",
       "providerId": "openai-compatible",
       "enabled": true,
-      "toolCallType": "manual"
+      "toolCallType": "manual",
+      "auth": false
     }
   ]
 }

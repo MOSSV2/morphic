@@ -1,20 +1,22 @@
 'use client'
 
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { Model } from '@/lib/types/models'
 import { getCookie, setCookie } from '@/lib/utils/cookies'
 import { isReasoningModel } from '@/lib/utils/registry'
-import { Check, ChevronsUpDown, Lightbulb } from 'lucide-react'
+import { Check, ChevronsUpDown, Lightbulb, Lock } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { createModelId } from '../lib/utils'
 import { Button } from './ui/button'
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList
 } from './ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 
@@ -38,6 +40,7 @@ interface ModelSelectorProps {
 export function ModelSelector({ models }: ModelSelectorProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState('')
+  const { isAuthenticated } = useCurrentUser()
 
   useEffect(() => {
     const savedModel = getCookie('selectedModel')
@@ -53,9 +56,24 @@ export function ModelSelector({ models }: ModelSelectorProps) {
 
   const handleModelSelect = (id: string) => {
     const newValue = id === value ? '' : id
+    const selectedModel = models.find(model => createModelId(model) === newValue)
+    
+    // Check if model requires authentication
+    if (selectedModel?.auth && !isAuthenticated) {
+      toast.error('This model requires authentication. Please sign in to use it.', {
+        action: {
+          label: 'Sign In',
+          onClick: () => {
+            window.location.href = '/auth/login'
+          }
+        }
+      })
+      setOpen(false)
+      return
+    }
+    
     setValue(newValue)
     
-    const selectedModel = models.find(model => createModelId(model) === newValue)
     if (selectedModel) {
       setCookie('selectedModel', JSON.stringify(selectedModel))
     } else {
@@ -89,6 +107,9 @@ export function ModelSelector({ models }: ModelSelectorProps) {
               <span className="text-xs font-medium">{selectedModel.name}</span>
               {isReasoningModel(selectedModel.id) && (
                 <Lightbulb size={12} className="text-accent-blue-foreground" />
+              )}
+              {selectedModel.auth && (
+                <Lock size={12} className="text-orange-500" />
               )}
             </div>
           ) : (
@@ -124,6 +145,12 @@ export function ModelSelector({ models }: ModelSelectorProps) {
                         <span className="text-xs font-medium">
                           {model.name}
                         </span>
+                        {isReasoningModel(model.id) && (
+                          <Lightbulb size={12} className="text-accent-blue-foreground" />
+                        )}
+                        {model.auth && (
+                          <Lock size={12} className="text-orange-500" />
+                        )}
                       </div>
                       <Check
                         className={`h-4 w-4 ${

@@ -6,4 +6,5 @@ export interface Model {
   enabled: boolean
   toolCallType: 'native' | 'manual'
   toolCallModel?: string
+  auth?: boolean
 }

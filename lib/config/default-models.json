@@ -6,7 +6,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": true
     },
     {
       "id": "gpt-4.1-mini",
@@ -14,7 +15,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "gpt-4.1-nano",
@@ -22,7 +24,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "o3-mini",
@@ -30,7 +33,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": true
     },
     {
       "id": "gpt-4o",
@@ -38,7 +42,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": true
     },
     {
       "id": "gpt-4o-mini",
@@ -46,7 +51,8 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "claude-3-7-sonnet-20250219",
@@ -54,7 +60,8 @@
       "provider": "Anthropic",
       "providerId": "anthropic",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "claude-3-5-sonnet-latest",
@@ -62,7 +69,8 @@
       "provider": "Anthropic",
       "providerId": "anthropic",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "claude-3-5-haiku-20241022",
@@ -70,7 +78,8 @@
       "provider": "Anthropic",
       "providerId": "anthropic",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "<AZURE_DEPLOYMENT_NAME>",
@@ -78,7 +87,8 @@
       "provider": "Azure",
       "providerId": "azure",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "gemini-2.0-flash",
@@ -86,7 +96,8 @@
       "provider": "Google Generative AI",
       "providerId": "google",
       "enabled": true,
-      "toolCallType": "manual"
+      "toolCallType": "manual",
+      "auth": false
     },
     {
       "id": "gemini-2.0-flash-thinking-exp-01-21",
@@ -95,7 +106,8 @@
       "providerId": "google",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "gemini-2.0-flash"
+      "toolCallModel": "gemini-2.0-flash",
+      "auth": false
     },
     {
       "id": "gemini-2.5-pro-exp-03-25",
@@ -104,7 +116,8 @@
       "providerId": "google",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "gemini-2.0-flash"
+      "toolCallModel": "gemini-2.0-flash",
+      "auth": false
     },
     {
       "id": "accounts/fireworks/models/deepseek-r1",
@@ -113,7 +126,8 @@
       "providerId": "fireworks",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "accounts/fireworks/models/llama-v3p1-8b-instruct"
+      "toolCallModel": "accounts/fireworks/models/llama-v3p1-8b-instruct",
+      "auth": false
     },
     {
       "id": "accounts/fireworks/models/llama4-maverick-instruct-basic",
@@ -122,7 +136,8 @@
       "providerId": "fireworks",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "accounts/fireworks/models/llama-v3p1-8b-instruct"
+      "toolCallModel": "accounts/fireworks/models/llama-v3p1-8b-instruct",
+      "auth": false
     },
     {
       "id": "deepseek-reasoner",
@@ -131,7 +146,8 @@
       "providerId": "deepseek",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "deepseek-chat"
+      "toolCallModel": "deepseek-chat",
+      "auth": false
     },
     {
       "id": "deepseek-chat",
@@ -139,7 +155,8 @@
       "provider": "DeepSeek",
       "providerId": "deepseek",
       "enabled": true,
-      "toolCallType": "manual"
+      "toolCallType": "manual",
+      "auth": false
     },
     {
       "id": "deepseek-r1-distill-llama-70b",
@@ -148,7 +165,8 @@
       "providerId": "groq",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "llama-3.1-8b-instant"
+      "toolCallModel": "llama-3.1-8b-instant",
+      "auth": false
     },
     {
       "id": "meta-llama/llama-4-maverick-17b-128e-instruct",
@@ -156,7 +174,8 @@
       "provider": "Groq",
       "providerId": "groq",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "deepseek-r1",
@@ -165,7 +184,8 @@
       "providerId": "ollama",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "phi4"
+      "toolCallModel": "phi4",
+      "auth": false
     },
     {
       "id": "<OLLAMA_MODEL_ID>",
@@ -174,7 +194,8 @@
       "providerId": "ollama",
       "enabled": true,
       "toolCallType": "manual",
-      "toolCallModel": "<OLLAMA_MODEL_ID>"
+      "toolCallModel": "<OLLAMA_MODEL_ID>",
+      "auth": false
     },
     {
       "id": "grok-2-1212",
@@ -182,7 +203,8 @@
       "provider": "xAI",
       "providerId": "xai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "grok-2-vision-1212",
@@ -190,7 +212,8 @@
       "provider": "xAI",
       "providerId": "xai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "grok-3-beta",
@@ -198,7 +221,8 @@
       "provider": "xAI",
       "providerId": "xai",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     },
     {
       "id": "<OPENAI_COMPATIBLE_MODEL>",
@@ -206,7 +230,8 @@
       "provider": "OpenAI Compatible",
       "providerId": "openai-compatible",
       "enabled": true,
-      "toolCallType": "native"
+      "toolCallType": "native",
+      "auth": false
     }
   ]
 }

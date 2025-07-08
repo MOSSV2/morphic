@@ -14,7 +14,8 @@ const DEFAULT_MODEL: Model = {
   provider: 'OpenAI',
   providerId: 'openai',
   enabled: true,
-  toolCallType: 'native'
+  toolCallType: 'native',
+  auth: false
 }
 
 export async function POST(req: Request) {
@@ -56,6 +57,23 @@ export async function POST(req: Request) {
         {
           status: 404,
           statusText: 'Not Found'
+        }
+      )
+    }
+
+    // Check if model requires authentication
+    if (selectedModel.auth === true && !isAuthenticated) {
+      return new Response(
+        JSON.stringify({
+          error: 'Authentication required',
+          message: 'This model requires authentication. Please sign in to use it.'
+        }),
+        {
+          status: 401,
+          statusText: 'Unauthorized',
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
       )
     }

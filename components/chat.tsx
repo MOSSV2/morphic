@@ -56,7 +56,20 @@ export function Chat({
       window.dispatchEvent(new CustomEvent('chat-history-updated'))
     },
     onError: error => {
-      toast.error(`Error in chat: ${error.message}`)
+      // Handle authentication errors specifically
+      if (error.message.includes('Authentication required')) {
+        toast.error('This model requires authentication. Please sign in to use it.', {
+          action: {
+            label: 'Sign In',
+            onClick: () => {
+              // Redirect to sign in page
+              window.location.href = '/auth/login'
+            }
+          }
+        })
+      } else {
+        toast.error(`Error in chat: ${error.message}`)
+      }
     },
     sendExtraMessageFields: false, // Disable extra message fields,
     experimental_throttle: 100
