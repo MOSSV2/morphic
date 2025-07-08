@@ -14,9 +14,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@supabase/supabase-js'
-import { Link2, LogOut, Palette } from 'lucide-react'
+import { LogOut, Palette } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { ExternalLinkItems } from './external-link-items'
 import { ThemeMenuItems } from './theme-menu-items'
 import { Button } from './ui/button'
 
@@ -81,15 +80,6 @@ export default function UserMenu({ user }: UserMenuProps) {
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             <ThemeMenuItems />
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
-            <Link2 className="mr-2 h-4 w-4" />
-            <span>Links</span>
-          </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <ExternalLinkItems />
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
