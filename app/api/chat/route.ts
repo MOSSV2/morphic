@@ -1,7 +1,8 @@
-import { getCurrentUserId } from '@/lib/auth/get-current-user'
+import { getCurrentUser, getCurrentUserId } from '@/lib/auth/get-current-user'
 import { createManualToolStreamResponse } from '@/lib/streaming/create-manual-tool-stream'
 import { createToolCallingStreamResponse } from '@/lib/streaming/create-tool-calling-stream'
 import { Model } from '@/lib/types/models'
+import { checkRateLimit, printUserCallCount } from '@/lib/utils/rate-limit'
 import { isProviderEnabled } from '@/lib/utils/registry'
 import { cookies } from 'next/headers'
 
@@ -22,6 +23,8 @@ export async function POST(req: Request) {
     const referer = req.headers.get('referer')
     const isSharePage = referer?.includes('/share/')
     const userId = await getCurrentUserId()
+    const user = await getCurrentUser()
+    const isAuthenticated = user !== null
 
     if (isSharePage) {
       return new Response('Chat API is not available on share pages', {
@@ -56,6 +59,60 @@ export async function POST(req: Request) {
         }
       )
     }
+
+    // Print debug information about user's call count
+    console.log(`\n🚀 New API call:`)
+    console.log(`👤 User: ${userId}`)
+    console.log(`🤖 Model: ${selectedModel.id}`)
+    console.log(`🔐 Authenticated: ${isAuthenticated}`)
+    console.log(`📅 Time: ${new Date().toISOString()}`)
+    
+    // Print detailed call count information
+    await printUserCallCount(userId, selectedModel.id, isAuthenticated)
+
+    // Check rate limit for the selected model
+    const rateLimitResult = await checkRateLimit(userId, selectedModel.id, isAuthenticated)
+    
+    console.log(`\n📊 Rate limit check result:`)
+    console.log(`   Allowed: ${rateLimitResult.allowed}`)
+    console.log(`   Remaining: ${rateLimitResult.remaining}`)
+    console.log(`   Quota Remaining: ${rateLimitResult.quotaRemaining || 'N/A'}`)
+    console.log(`   Reset Time: ${new Date(rateLimitResult.resetTime).toISOString()}`)
+    
+    if (!rateLimitResult.allowed) {
+      const resetTime = new Date(rateLimitResult.resetTime).toISOString()
+      const errorMessage = isAuthenticated 
+        ? 'You have exceeded the rate limit or your lifetime quota. Please try again later.'
+        : 'You have exceeded the rate limit. Please sign up for more requests.'
+      
+      console.log(`❌ Rate limit exceeded!`)
+      console.log(`   Error: ${errorMessage}`)
+      console.log(`   Reset time: ${resetTime}`)
+      
+      return new Response(
+        JSON.stringify({
+          error: 'Rate limit exceeded',
+          message: errorMessage,
+          resetTime: resetTime,
+          remaining: rateLimitResult.remaining,
+          quotaRemaining: rateLimitResult.quotaRemaining
+        }),
+        {
+          status: 429,
+          statusText: 'Too Many Requests',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RateLimit-Reset': resetTime,
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            ...(rateLimitResult.quotaRemaining !== undefined && {
+              'X-RateLimit-Quota-Remaining': rateLimitResult.quotaRemaining.toString()
+            })
+          }
+        }
+      )
+    }
+
+    console.log(`✅ Rate limit check passed, proceeding with request`)
 
     const supportsToolCalling = selectedModel.toolCallType === 'native'
 
