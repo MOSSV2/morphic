@@ -2,11 +2,12 @@ import { Chat } from '@/components/chat'
 import { getChat } from '@/lib/actions/chat'
 import { getCurrentUserId } from '@/lib/auth/get-current-user'
 import { getModels } from '@/lib/config/models'
+import { ExtendedCoreMessage, SearchResults } from '@/lib/types'; // Added SearchResults
 import { convertToUIMessages } from '@/lib/utils'
 import { notFound, redirect } from 'next/navigation'
-import { ExtendedCoreMessage, SearchResults } from '@/lib/types'; // Added SearchResults
 
 export const maxDuration = 60
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>;

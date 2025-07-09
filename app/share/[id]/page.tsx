@@ -4,6 +4,8 @@ import { getModels } from '@/lib/config/models'
 import { convertToUIMessages } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata(props: {
   params: Promise<{ id: string }>
 }) {

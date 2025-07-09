@@ -5,7 +5,7 @@
       "name": "GPT-4.1",
       "provider": "OpenAI",
       "providerId": "openai",
-      "enabled": true,
+      "enabled": false,
       "toolCallType": "native",
       "auth": true
     },
@@ -32,7 +32,7 @@
       "name": "o3 mini",
       "provider": "OpenAI",
       "providerId": "openai",
-      "enabled": true,
+      "enabled": false,
       "toolCallType": "native",
       "auth": true
     },
@@ -41,7 +41,7 @@
       "name": "GPT-4o",
       "provider": "OpenAI",
       "providerId": "openai",
-      "enabled": true,
+      "enabled": false,
       "toolCallType": "native",
       "auth": true
     },
@@ -50,7 +50,7 @@
       "name": "GPT-4o mini",
       "provider": "OpenAI",
       "providerId": "openai",
-      "enabled": true,
+      "enabled": false,
       "toolCallType": "native",
       "auth": false
     },
@@ -80,7 +80,7 @@
       "providerId": "openai-compatible",
       "enabled": true,
       "toolCallType": "manual",
-      "auth": false
+      "auth": true
     }
   ]
 }

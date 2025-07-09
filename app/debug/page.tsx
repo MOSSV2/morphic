@@ -108,7 +108,7 @@ export default function DebugPage() {
           <CardContent>
             <ol className="space-y-2 text-sm list-decimal list-inside">
               <li>Enter a model ID (e.g., gpt-4o-mini, gpt-4o, claude-3-5-sonnet)</li>
-              <li>Click "Check Call Count" to see your current usage</li>
+              <li>Click &quot;Check Call Count&quot; to see your current usage</li>
               <li>Check the browser console for detailed debug information</li>
               <li>Make some API calls and check again to see the count increase</li>
             </ol>

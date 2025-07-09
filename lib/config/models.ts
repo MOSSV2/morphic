@@ -17,6 +17,18 @@ export function validateModel(model: any): model is Model {
 }
 
 export async function getModels(): Promise<Model[]> {
+  // For static rendering, always return default models
+  if (typeof window === 'undefined' && !process.env.NEXT_PUBLIC_BASE_URL) {
+    console.log('Static rendering detected, using default models')
+    if (
+      Array.isArray(defaultModels.models) &&
+      defaultModels.models.every(validateModel)
+    ) {
+      return defaultModels.models as Model[]
+    }
+    return []
+  }
+
   try {
     // Get the base URL using the centralized utility function
     const baseUrlObj = await getBaseUrl()
@@ -51,7 +63,7 @@ export async function getModels(): Promise<Model[]> {
       const config = JSON.parse(text)
       if (Array.isArray(config.models) && config.models.every(validateModel)) {
         console.log('Successfully loaded models from URL')
-        return config.models
+        return config.models as Model[]
       }
     } catch (error: any) {
       // Fallback to default models if fetch fails
@@ -65,7 +77,7 @@ export async function getModels(): Promise<Model[]> {
         defaultModels.models.every(validateModel)
       ) {
         console.log('Successfully loaded default models')
-        return defaultModels.models
+        return defaultModels.models as Model[]
       }
     }
   } catch (error) {

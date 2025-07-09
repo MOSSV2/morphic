@@ -4,6 +4,7 @@ import { generateId } from 'ai'
 import { redirect } from 'next/navigation'
 
 export const maxDuration = 60
+export const dynamic = 'force-dynamic'
 
 export default async function SearchPage(props: {
   searchParams: Promise<{ q: string }>
