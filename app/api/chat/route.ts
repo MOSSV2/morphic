@@ -2,7 +2,7 @@ import { getCurrentUser, getCurrentUserId } from '@/lib/auth/get-current-user'
 import { createManualToolStreamResponse } from '@/lib/streaming/create-manual-tool-stream'
 import { createToolCallingStreamResponse } from '@/lib/streaming/create-tool-calling-stream'
 import { Model } from '@/lib/types/models'
-import { checkRateLimit, printUserCallCount } from '@/lib/utils/rate-limit'
+import { checkRateLimit, printUserCallCount, trackModelUsage } from '@/lib/utils/rate-limit'
 import { isProviderEnabled } from '@/lib/utils/registry'
 import { cookies } from 'next/headers'
 
@@ -131,6 +131,9 @@ export async function POST(req: Request) {
     }
 
     console.log(`✅ Rate limit check passed, proceeding with request`)
+
+    // Track model usage for statistics
+    await trackModelUsage(selectedModel.id)
 
     const supportsToolCalling = selectedModel.toolCallType === 'native'
 

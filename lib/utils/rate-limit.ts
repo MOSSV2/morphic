@@ -338,4 +338,62 @@ export async function resetUserRateLimit(userId: string, modelId?: string): Prom
   } catch (error) {
     console.error('Reset rate limit error:', error)
   }
+}
+
+// Track model usage statistics
+export async function trackModelUsage(modelId: string): Promise<void> {
+  const redis = await initializeRedisClient()
+  if (!redis) {
+    console.log('❌ Redis not available for model usage tracking')
+    return
+  }
+
+  const now = Date.now()
+  const modelUsageKey = `model_usage:${modelId}`
+  
+  try {
+    // Add current usage to the model's sorted set
+    await redis.zadd(modelUsageKey, now, now.toString())
+    
+    // Keep only the last 30 days of data (cleanup old entries)
+    const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000)
+    const oldEntries = await redis.zrangebyscore(modelUsageKey, 0, thirtyDaysAgo)
+    for (const entry of oldEntries) {
+      await redis.zrem(modelUsageKey, entry)
+    }
+    
+    console.log(`✅ Tracked model usage for ${modelId}`)
+  } catch (error) {
+    console.error('❌ Error tracking model usage:', error)
+  }
+}
+
+// Get model usage statistics
+export async function getModelUsageStats(): Promise<Array<{ model: string; count: number }>> {
+  const redis = await initializeRedisClient()
+  if (!redis) {
+    console.log('❌ Redis not available for model usage stats')
+    return []
+  }
+
+  try {
+    const modelKeys = await redis.keys('model_usage:*')
+    const modelStats: Array<{ model: string; count: number }> = []
+    
+    for (const key of modelKeys) {
+      const modelId = key.replace('model_usage:', '')
+      const count = await redis.zcard(key)
+      if (count > 0) {
+        modelStats.push({ model: modelId, count })
+      }
+    }
+    
+    // Sort by count in descending order
+    modelStats.sort((a, b) => b.count - a.count)
+    
+    return modelStats
+  } catch (error) {
+    console.error('❌ Error getting model usage stats:', error)
+    return []
+  }
 } 

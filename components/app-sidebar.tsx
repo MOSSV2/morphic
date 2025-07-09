@@ -1,15 +1,15 @@
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-  SidebarTrigger
+    Sidebar,
+    SidebarContent,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarRail,
+    SidebarTrigger
 } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
-import { Plus } from 'lucide-react'
+import { BarChart3, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { ChatHistorySection } from './sidebar/chat-history-section'
@@ -33,6 +33,14 @@ export default function AppSidebar() {
               <Link href="/" className="flex items-center gap-2">
                 <Plus className="size-4" />
                 <span>New</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/stats" className="flex items-center gap-2">
+                <BarChart3 className="size-4" />
+                <span>Statistics</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

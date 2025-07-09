@@ -102,6 +102,34 @@ export class RedisWrapper {
     }
   }
 
+  async keys(pattern: string): Promise<string[]> {
+    if (this.client instanceof Redis) {
+      return this.client.keys(pattern)
+    } else {
+      return (this.client as RedisClientType).keys(pattern)
+    }
+  }
+
+  async zrangebyscore(
+    key: string,
+    min: number,
+    max: number
+  ): Promise<string[]> {
+    if (this.client instanceof Redis) {
+      return this.client.zrange(key, min, max, { byScore: true })
+    } else {
+      return (this.client as RedisClientType).zRangeByScore(key, min, max)
+    }
+  }
+
+  async zcard(key: string): Promise<number> {
+    if (this.client instanceof Redis) {
+      return this.client.zcard(key)
+    } else {
+      return (this.client as RedisClientType).zCard(key)
+    }
+  }
+
   async close(): Promise<void> {
     if (this.client instanceof Redis) {
       // Upstash Redis doesn't require explicit closing
