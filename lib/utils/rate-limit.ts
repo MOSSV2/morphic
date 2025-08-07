@@ -179,6 +179,7 @@ export async function checkRateLimit(
       // Add current request to both sorted sets
       await redis.zadd(hourlyKey, now, now.toString())
       await redis.zadd(quotaKey, now, now.toString())
+      await trackRequest(redis, userId, isAuthenticated)
       
       // Remove old entries outside the window (simplified approach)
       const hourlyRequestsToRemove = hourlyRequests.filter(req => {
@@ -220,6 +221,7 @@ export async function checkRateLimit(
 
       // Add current request to the sorted set
       await redis.zadd(key, now, now.toString())
+      await trackRequest(redis, userId, isAuthenticated)
       
       // Remove old entries outside the window
       const requestsToRemove = requests.filter(req => {
@@ -240,6 +242,27 @@ export async function checkRateLimit(
     console.error('Rate limit check error:', error)
     // If there's an error, allow the request
     return { allowed: true, remaining: 999, resetTime: now + 3600000 }
+  }
+}
+
+async function trackRequest(
+  redis: RedisWrapper,
+  userId: string,
+  isAuthenticated: boolean
+) {
+  try {
+    const now = new Date()
+    const hour_key = now.toISOString().slice(0, 13)
+    const day_key = now.toISOString().slice(0, 10)
+    const userType = isAuthenticated ? 'authenticated' : 'anonymous'
+
+    const pipeline = redis.multi()
+    pipeline.hincrby('stats:requests:hourly', hour_key, 1)
+    pipeline.hincrby('stats:requests:daily', day_key, 1)
+    pipeline.sadd(`stats:users:${userType}`, userId)
+    await pipeline.exec()
+  } catch (error) {
+    console.error('Failed to track request:', error)
   }
 }
 
@@ -344,27 +367,13 @@ export async function resetUserRateLimit(userId: string, modelId?: string): Prom
 export async function trackModelUsage(modelId: string): Promise<void> {
   const redis = await initializeRedisClient()
   if (!redis) {
-    console.log('❌ Redis not available for model usage tracking')
     return
   }
 
-  const now = Date.now()
-  const modelUsageKey = `model_usage:${modelId}`
-  
   try {
-    // Add current usage to the model's sorted set
-    await redis.zadd(modelUsageKey, now, now.toString())
-    
-    // Keep only the last 30 days of data (cleanup old entries)
-    const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000)
-    const oldEntries = await redis.zrangebyscore(modelUsageKey, 0, thirtyDaysAgo)
-    for (const entry of oldEntries) {
-      await redis.zrem(modelUsageKey, entry)
-    }
-    
-    console.log(`✅ Tracked model usage for ${modelId}`)
+    await redis.zincrby('stats:models', 1, modelId)
   } catch (error) {
-    console.error('❌ Error tracking model usage:', error)
+    console.error('Error tracking model usage:', error)
   }
 }
 
@@ -372,28 +381,23 @@ export async function trackModelUsage(modelId: string): Promise<void> {
 export async function getModelUsageStats(): Promise<Array<{ model: string; count: number }>> {
   const redis = await initializeRedisClient()
   if (!redis) {
-    console.log('❌ Redis not available for model usage stats')
     return []
   }
 
   try {
-    const modelKeys = await redis.keys('model_usage:*')
-    const modelStats: Array<{ model: string; count: number }> = []
+    // Get top 50 models by usage
+    const modelStats = await redis.zrevrange('stats:models', 0, 49, 'WITHSCORES')
     
-    for (const key of modelKeys) {
-      const modelId = key.replace('model_usage:', '')
-      const count = await redis.zcard(key)
-      if (count > 0) {
-        modelStats.push({ model: modelId, count })
-      }
+    const result: Array<{ model: string; count: number }> = []
+    for (let i = 0; i < modelStats.length; i += 2) {
+      result.push({
+        model: modelStats[i],
+        count: parseInt(modelStats[i + 1])
+      })
     }
-    
-    // Sort by count in descending order
-    modelStats.sort((a, b) => b.count - a.count)
-    
-    return modelStats
+    return result
   } catch (error) {
-    console.error('❌ Error getting model usage stats:', error)
+    console.error('Error getting model usage stats:', error)
     return []
   }
 } 
