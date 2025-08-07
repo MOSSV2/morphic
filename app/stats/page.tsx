@@ -62,11 +62,6 @@ export default function StatsPage() {
     fetchStats()
   }, [fetchStats])
 
-  // Auto-refresh every 30 seconds
-  useEffect(() => {
-    const interval = setInterval(fetchStats, 30000)
-    return () => clearInterval(interval)
-  }, [fetchStats])
 
   const formatTime = (timeString: string) => {
     const date = new Date(timeString)
